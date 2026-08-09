@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>Desk Lock</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <svg class="svg-sprite" aria-hidden="true">
+      <symbol id="i-today" viewBox="0 0 24 24"><path d="M4 6.5h16v13H4zM8 3v5M16 3v5M4 10h16" /></symbol>
+      <symbol id="i-task" viewBox="0 0 24 24"><path d="m4 7 2 2 4-4M12 7h8M4 14l2 2 4-4M12 14h8M12 20h8" /></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2M9 2h6" /></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.8 2.8 8.2 7 10 4.2-1.8 7-5.2 7-10V6z" /><path d="m9 12 2 2 4-5" /></symbol>
+      <symbol id="i-chart" viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7M3 20h18" /></symbol>
+      <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.4 1A8 8 0 0 0 15 6l-.3-2.6h-4L10.4 6A8 8 0 0 0 8 7L5.6 6 3.6 9.5 5.8 11a8 8 0 0 0 0 2l-2.2 1.5 2 3.4 2.4-1a8 8 0 0 0 2.4 1.1l.3 2.6h4L15 18a8 8 0 0 0 2.4-1.1l2.4 1 2-3.4-2.2-1.5a7 7 0 0 0 .4-1z" /></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="m9 6 9 6-9 6z" /></symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24"><path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5" /></symbol>
+      <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6h7l2 2h9v11H3z" /></symbol>
+      <symbol id="i-open" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M19 13v7H4V5h7" /></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" /></symbol>
+      <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z" /><circle cx="12" cy="12" r="2.5" /></symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5M6.1 9A7 7 0 0 1 18.5 7M17.9 15A7 7 0 0 1 5.5 17" /></symbol>
+    </svg>
+
+    <div class="app-shell">
+      <nav class="nav-rail" aria-label="主要导航">
+        <button class="brand-mark" data-view-target="today" aria-label="Desk Lock 首页">
+          <span class="brand-fruit"><span></span></span>
+        </button>
+        <div class="nav-items">
+          <button class="nav-item is-active" data-view-target="today"><svg><use href="#i-today" /></svg><span>今天</span></button>
+          <button class="nav-item" data-view-target="tasks"><svg><use href="#i-task" /></svg><span>任务</span></button>
+          <button class="nav-item" data-view-target="schedules"><svg><use href="#i-clock" /></svg><span>锁定</span></button>
+          <button class="nav-item" data-view-target="whitelist"><svg><use href="#i-shield" /></svg><span>白名单</span></button>
+          <button class="nav-item" data-view-target="stats"><svg><use href="#i-chart" /></svg><span>统计</span></button>
+        </div>
+        <button class="nav-item nav-settings" data-view-target="settings"><svg><use href="#i-settings" /></svg><span>设置</span></button>
+      </nav>
+
+      <main class="workspace" id="workspace">
+        <header class="topbar">
+          <div>
+            <p class="topbar-date" id="today-label"></p>
+            <h1 id="view-title">今天，先做一件事</h1>
+          </div>
+          <div class="topbar-status"><span class="status-dot"></span><span id="top-status">等待开始</span></div>
+        </header>
+
+        <aside class="focus-guard" id="focus-guard" hidden aria-live="polite">
+          <div class="guard-mark"><span class="brand-fruit"><span></span></span></div>
+          <div class="guard-copy"><strong>锁定仍在运行</strong><span id="guard-detail">切换到未允许的应用时会自动回到锁定层。</span></div>
+          <button id="return-to-lock" class="btn btn-primary"><svg><use href="#i-shield" /></svg><span>返回锁定层</span></button>
+        </aside>
+
+        <section class="view is-active" data-view="today" aria-labelledby="view-title">
+          <div class="dashboard-grid">
+            <section class="focus-card" aria-label="开始专注">
+              <div class="focus-card-head">
+                <div>
+                  <p class="section-note">专注计时</p>
+                  <input id="focus-title" class="title-input" value="完成当前任务" aria-label="本次专注内容" maxlength="80" />
+                </div>
+                <div class="timer-preview" id="timer-preview">25:00</div>
+              </div>
+
+              <div class="duration-row" aria-label="专注时长">
+                <button class="duration-chip" data-minutes="15">15 分钟</button>
+                <button class="duration-chip is-selected" data-minutes="25">25 分钟</button>
+                <button class="duration-chip" data-minutes="45">45 分钟</button>
+                <label class="custom-duration"><span>自定义</span><input id="custom-duration" type="number" min="1" max="480" value="25" /><span>分</span></label>
+              </div>
+
+              <fieldset class="mode-switch">
+                <legend>锁定方式</legend>
+                <label><input type="radio" name="mode" value="scholar" checked /><span><strong>学霸模式</strong><small>允许随时结束</small></span></label>
+                <label><input type="radio" name="mode" value="strict" /><span><strong>严格模式</strong><small>退出前冷静 60 秒</small></span></label>
+              </fieldset>
+
+              <div class="focus-actions">
+                <button id="start-focus" class="btn btn-primary"><svg><use href="#i-play" /></svg><span>开始专注</span></button>
+                <p><span id="allow-count">0</span> 个白名单应用可在锁定期间使用</p>
+              </div>
+            </section>
+
+            <aside class="companion-card" aria-label="专注伙伴状态">
+              <div class="companion-scene" aria-hidden="true">
+                <div class="companion-head"><span></span></div>
+                <div class="companion-body"></div>
+                <div class="companion-leg leg-one"></div>
+                <div class="companion-leg leg-two"></div>
+                <div class="companion-book"></div>
+              </div>
+              <div>
+                <p class="section-note">小番在这里</p>
+                <h2>不用做到满分，先坐下二十五分钟。</h2>
+              </div>
+              <dl class="today-stats">
+                <div><dt>今日专注</dt><dd id="today-minutes">0 分钟</dd></div>
+                <div><dt>完成轮次</dt><dd id="today-sessions">0</dd></div>
+              </dl>
+            </aside>
+          </div>
+
+          <section class="task-section">
+            <div class="section-heading">
+              <div><h2>接下来做什么</h2><p>任务只写到足够开始。</p></div>
+              <button class="btn btn-secondary" data-view-target="tasks">查看全部</button>
+            </div>
+            <div id="today-task-list" class="task-list"></div>
+          </section>
+        </section>
+
+        <section class="view" data-view="tasks">
+          <div class="section-heading page-heading"><div><h2>任务清单</h2><p>把模糊的压力写成可以开始的一步。</p></div></div>
+          <form id="task-form" class="add-row">
+            <label><span>任务内容</span><input id="task-input" required maxlength="100" placeholder="例如：整理第三章笔记" /></label>
+            <label class="minutes-field"><span>预计时长</span><input id="task-minutes" type="number" min="1" max="480" value="25" /></label>
+            <button class="btn btn-primary" type="submit"><svg><use href="#i-plus" /></svg><span>添加任务</span></button>
+          </form>
+          <div id="all-task-list" class="task-list task-list-large"></div>
+        </section>
+
+        <section class="view" data-view="schedules">
+          <div class="section-heading page-heading"><div><h2>定时锁定</h2><p>到点自动进入学霸模式；应用必须保持运行。</p></div></div>
+          <form id="schedule-form" class="schedule-form">
+            <label><span>计划名称</span><input id="schedule-title" value="晚间专注" maxlength="60" /></label>
+            <label><span>开始时间</span><input id="schedule-time" type="time" value="20:00" required /></label>
+            <label><span>持续时长</span><input id="schedule-duration" type="number" min="1" max="480" value="60" /></label>
+            <label><span>默认模式</span><select id="schedule-mode"><option value="scholar">学霸模式</option><option value="strict">严格模式</option></select></label>
+            <fieldset class="weekday-field"><legend>重复日期</legend><div id="weekday-options"></div></fieldset>
+            <button class="btn btn-primary" type="submit"><svg><use href="#i-plus" /></svg><span>添加计划</span></button>
+          </form>
+          <div id="schedule-list" class="schedule-list"></div>
+        </section>
+
+        <section class="view" data-view="whitelist">
+          <div class="section-heading page-heading">
+            <div><h2>应用白名单</h2><p>专注期间只允许这些应用出现在前台。</p></div>
+            <div class="heading-actions">
+              <button id="view-running-apps" class="btn btn-secondary"><svg><use href="#i-eye" /></svg><span>查看正在运行</span></button>
+              <button id="add-whitelist" class="btn btn-primary"><svg><use href="#i-plus" /></svg><span>选择应用</span></button>
+            </div>
+          </div>
+          <div class="notice"><svg><use href="#i-shield" /></svg><p><strong>只拦窗口，不结束进程。</strong> 后台程序、系统服务和未选择的应用都不会被关闭；从白名单移除也不会卸载或结束它。</p></div>
+          <div id="whitelist-list" class="whitelist-list"></div>
+        </section>
+
+        <section class="view" data-view="stats">
+          <div class="section-heading page-heading"><div><h2>专注记录</h2><p>只记录真实发生的时间，不用虚构连续打卡。</p></div></div>
+          <div class="stats-overview">
+            <div class="stat-block"><span>今日</span><strong id="stat-today">0</strong><small>分钟</small></div>
+            <div class="stat-block"><span>本周</span><strong id="stat-week">0</strong><small>分钟</small></div>
+            <div class="stat-block"><span>已完成</span><strong id="stat-completed">0</strong><small>轮</small></div>
+          </div>
+          <div class="week-chart" id="week-chart" aria-label="最近七天专注时长"></div>
+          <div class="session-history" id="session-history"></div>
+        </section>
+
+        <section class="view" data-view="settings">
+          <div class="section-heading page-heading"><div><h2>设置</h2><p>默认值可以温和，恢复路径必须明确。</p></div></div>
+          <div class="settings-list">
+            <label class="settings-row"><span><strong>开机启动</strong><small>确保定时锁定可以按计划触发</small></span><input id="startup-toggle" type="checkbox" role="switch" /></label>
+            <label class="settings-row"><span><strong>默认专注时长</strong><small>新专注任务使用的初始时长</small></span><input id="default-duration" type="number" min="1" max="480" /></label>
+            <label class="settings-row"><span><strong>默认锁定模式</strong><small>定时任务未单独设置时使用</small></span><select id="default-mode"><option value="scholar">学霸模式</option><option value="strict">严格模式</option></select></label>
+            <section class="settings-row clock-style-setting">
+              <span><strong>计时器样式</strong><small>锁定层底部也可以随时切换</small></span>
+              <fieldset class="clock-style-options" aria-label="计时器样式">
+                <label class="clock-choice">
+                  <input type="radio" name="clock-style" value="ring" />
+                  <span class="clock-choice-card"><span class="ring-preview"><i></i></span><span><strong>圆环</strong><small>安静、连续</small></span></span>
+                </label>
+                <label class="clock-choice">
+                  <input type="radio" name="clock-style" value="flip" />
+                  <span class="clock-choice-card"><span class="flip-preview"><i>2</i><i>5</i></span><span><strong>翻页</strong><small>更像桌面钟</small></span></span>
+                </label>
+              </fieldset>
+            </section>
+            <section class="settings-row clock-color-setting">
+              <span><strong>时间高亮色</strong><small>用于圆环进度、翻页数字和当前时间</small></span>
+              <div class="clock-color-panel">
+                <div class="color-swatches" aria-label="推荐颜色">
+                  <button type="button" data-clock-color="#ff6b4a" style="--swatch:#ff6b4a" aria-label="番茄红"></button>
+                  <button type="button" data-clock-color="#ffb340" style="--swatch:#ffb340" aria-label="琥珀黄"></button>
+                  <button type="button" data-clock-color="#62d6a7" style="--swatch:#62d6a7" aria-label="薄荷绿"></button>
+                  <button type="button" data-clock-color="#62a8ff" style="--swatch:#62a8ff" aria-label="清醒蓝"></button>
+                </div>
+                <label class="color-control"><span>自选</span><input id="clock-color" type="color" value="#ff6b4a" /><output id="clock-color-value">#FF6B4A</output></label>
+              </div>
+            </section>
+          </div>
+          <section class="safety-note"><h3>安全恢复说明</h3><p>学霸模式可直接结束。严格模式要求等待 60 秒并输入“结束本次专注”。Windows 的任务管理器仍可终止本程序，因此它是自律工具，不是系统级家长控制。</p></section>
+        </section>
+
+        <footer class="status-footer"><span>Desk Lock · Windows</span><span id="footer-status">数据保存在本机</span></footer>
+      </main>
+    </div>
+
+    <dialog id="app-picker" class="app-picker" aria-labelledby="app-picker-title">
+      <section class="picker-shell">
+        <header class="picker-head">
+          <div><p class="section-note">应用放行</p><h2 id="app-picker-title">选择可用应用</h2></div>
+          <button id="close-app-picker" class="icon-btn" aria-label="关闭应用选择">×</button>
+        </header>
+        <p class="picker-safety">这里仅查看应用并加入白名单，不会关闭、删除或修改任何正在运行的程序。</p>
+        <div class="picker-toolbar">
+          <div class="picker-tabs" role="tablist" aria-label="应用范围">
+            <button class="picker-tab is-active" data-app-kind="running" role="tab" aria-selected="true">正在运行</button>
+            <button class="picker-tab" data-app-kind="installed" role="tab" aria-selected="false">已安装</button>
+          </div>
+          <button id="refresh-apps" class="btn btn-secondary"><svg><use href="#i-refresh" /></svg><span>刷新</span></button>
+        </div>
+        <label class="picker-search"><span>搜索应用</span><input id="app-search" type="search" placeholder="输入名称或路径" autocomplete="off" /></label>
+        <div id="app-catalog" class="app-catalog" aria-live="polite"></div>
+        <footer class="picker-footer">
+          <span id="catalog-summary">正在读取应用…</span>
+          <button id="manual-pick" class="btn btn-secondary"><svg><use href="#i-folder" /></svg><span>从文件中选择</span></button>
+        </footer>
+      </section>
+    </dialog>
+
+    <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+    <script src="core.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

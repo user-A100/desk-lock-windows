@@ -1,0 +1,80 @@
+/* Hallmark · tokens: Coral · warm-light / grotesk-sans / coral accent */
+:root {
+  --color-paper: oklch(96.8% 0.012 64);
+  --color-paper-2: oklch(93.5% 0.016 64);
+  --color-paper-3: oklch(90.5% 0.019 64);
+  --color-surface: oklch(99% 0.006 64);
+  --color-rule: oklch(84% 0.016 64);
+  --color-rule-strong: oklch(70% 0.018 64);
+  --color-neutral: oklch(43% 0.018 56);
+  --color-muted: oklch(40% 0.02 54);
+  --color-ink-soft: oklch(29% 0.018 48);
+  --color-ink: oklch(18% 0.016 45);
+  --color-accent: oklch(52% 0.17 31);
+  --color-accent-hover: oklch(46% 0.18 31);
+  --color-accent-soft: oklch(91% 0.045 31);
+  --color-accent-ink: oklch(98% 0.008 64);
+  --color-focus: oklch(60% 0.18 254);
+  --color-success: oklch(48% 0.12 153);
+  --color-success-soft: oklch(92% 0.04 153);
+  --color-warning: oklch(58% 0.14 72);
+  --color-warning-soft: oklch(92% 0.05 72);
+  --color-error: oklch(52% 0.2 25);
+  --color-error-soft: oklch(92% 0.045 25);
+  --color-lock-paper: oklch(15% 0.014 48);
+  --color-lock-surface: oklch(20% 0.016 48);
+  --color-lock-rule: oklch(33% 0.018 48);
+  --color-lock-muted: oklch(73% 0.018 58);
+  --color-lock-ink: oklch(95% 0.01 64);
+  --color-overlay: oklch(10% 0.01 48 / 0.66);
+
+  --font-display: "DengXian", "Microsoft YaHei UI", sans-serif;
+  --font-body: "Segoe UI Variable Text", "Microsoft YaHei UI", sans-serif;
+  --font-outlier: "Cascadia Mono", "Microsoft YaHei UI", monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.25rem;
+  --text-lg: 1.5625rem;
+  --text-xl: 1.953rem;
+  --text-2xl: 2.441rem;
+  --text-3xl: 3.052rem;
+  --text-display: clamp(2.75rem, 6vw, 5.25rem);
+
+  --space-3xs: 0.125rem;
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+  --space-4xl: 9rem;
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-pill: 999px;
+  --rule-thin: 1px;
+  --rule-strong: 2px;
+
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --shadow-card: 0 1px 2px oklch(20% 0.012 48 / 0.06);
+  --shadow-float: 0 18px 48px oklch(20% 0.012 48 / 0.13);
+
+  --z-base: 1;
+  --z-raised: 10;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-tooltip: 600;
+}

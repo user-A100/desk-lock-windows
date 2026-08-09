@@ -1,0 +1,40 @@
+{
+  "name": "desk-lock-windows",
+  "version": "0.2.5",
+  "private": true,
+  "description": "A calm, recoverable Windows focus lock and desktop clock.",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test",
+    "check": "node --check electron/main.js && node --check electron/preload.js && node --check src/core.js && node --check src/app.js && node --check src/lock.js",
+    "qa:visual": "electron scripts/capture-ui.js",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^38.0.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.mycraft.tomato-todo",
+    "productName": "Desk Lock",
+    "files": [
+      "electron/**/*",
+      "src/**/*",
+      "tokens.css",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "electron/*.ps1"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "productName": "Desk Lock"
+}
